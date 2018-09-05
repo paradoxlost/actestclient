@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?><schema version="0.9"><revision version="2013.07.27.0" /><datatypes><type name="BYTE" primitive="true" /><type name="WORD" primitive="true" /><type name="PackedWORD" primitive="true" /><type name="DWORD" primitive="true" /><type name="PackedDWORD" primitive="true" /><type name="QWORD" primitive="true" /><type name="float" primitive="true" /><type name="double" primitive="true" /><type name="String" primitive="true" /><type name="WString" primitive="true" /><type name="Position"><field name="flags" type="DWORD"></field><field name="landcell" type="DWORD"></field><field name="x" type="float"></field><field name="y" type="float"></field><field name="z" type="float"></field><maskmap name="flags" xor="0x00000078"><mask value="0x00000008"><field name="wQuat" type="float"></field></mask><mask value="0x00000010"><field name="xQuat" type="float"></field></mask><mask value="0x00000020"><field name="yQuat" type="float"></field></mask><mask value="0x00000040"><field name="zQuat" type="float"></field></mask></maskmap><maskmap name="flags"><mask value="0x00000001"><field name="dx" type="float"></field><field name="dy" type="float"></field><field name="dz" type="float"></field></mask><mask value="0x000002"><field name="unknown" type="DWORD"></field></mask></maskmap></type><type name="Position0"><field name="landcell" type="DWORD"></field><field name="x" type="float"></field><field name="y" type="float"></field><field name="z" type="float"></field><field name="wQuat" type="float"></field><field name="xQuat" type="float"></field><field name="yQuat" type="float"></field><field name="zQuat" type="float"></field></type><type name="ModelData"><field name="eleven" type="BYTE"></field><field name="paletteCount" type="BYTE"></field><field name="textureCount" type="BYTE"></field><field name="modelCount" type="BYTE"></field><maskmap name="paletteCount"><mask value="0xFF"><field name="palette" type="PackedDWORD"></field></mask></maskmap><vector name="palettes" length="paletteCount"><field name="palette" type="PackedDWORD"></field><field name="offset" type="BYTE"></field><field name="length" type="BYTE"></field></vector><vector name="textures" length="textureCount"><field name="index" type="BYTE"></field><field name="old" type="PackedDWORD"></field><field name="new" type="PackedDWORD"></field></vector><vector name="models" length="modelCount"><field name="index" type="BYTE"></field><field name="model" type="PackedDWORD"></field></vector><align type="DWORD" /></type>
+
+<type name="PhysicsData">
+<field name="flags" type="DWORD"></field>
+<field name="unknown" type="DWORD"></field>
+<maskmap name="flags">
+<mask value="0x00010000">
+    <field name="byteCount" type="DWORD"></field>
+    <vector name="bytes" length="byteCount"><field name="byte" type="BYTE"></field></vector>
+    <field name="unknown10000" type="DWORD"></field>
+</mask>
+</maskmap>
+<maskmap name="flags" xor="0x00030000">
+<mask value="0x00010000"><field name="unknown20000" type="DWORD"></field></mask>
+</maskmap>
+<maskmap name="flags">
+<mask value="0x00008000"><field name="position" type="Position0"></field></mask>
+<mask value="0x00000002"><field name="animations" type="DWORD"></field></mask>
+<mask value="0x00000800"><field name="sounds" type="DWORD"></field></mask>
+<mask value="0x00001000"><field name="unknown1000" type="DWORD"></field></mask>
+<mask value="0x00000001"><field name="model" type="DWORD"></field></mask>
+<mask value="0x00000020"><field name="equipper" type="DWORD"></field><field name="equipperSlot" type="DWORD"></field></mask><mask value="0x00000040"><field name="equippedCount" type="DWORD"></field><vector name="equipped" length="equippedCount"><field name="item" type="DWORD"></field><field name="slot" type="DWORD"></field></vector></mask><mask value="0x00000080"><field name="scale" type="float"></field></mask><mask value="0x00000100"><field name="unknown100" type="DWORD"></field></mask><mask value="0x00000200"><field name="unknown200" type="DWORD"></field></mask><mask value="0x00040000"><field name="unknown40000" type="float"></field></mask><mask value="0x00000004"><field name="dx" type="float"></field><field name="dy" type="float"></field><field name="dz" type="float"></field></mask><mask value="0x00000008"><field name="unknown8_1" type="float"></field><field name="unknown8_2" type="float"></field><field name="unknown8_3" type="float"></field></mask><mask value="0x00000010"><field name="rx" type="float"></field><field name="ry" type="float"></field><field name="rz" type="float"></field></mask><mask value="0x00002000"><field name="unknown2000" type="DWORD"></field></mask><mask value="0x00004000"><field name="unknown4000" type="DWORD"></field></mask></maskmap><field name="unknown1" type="WORD"></field><field name="unknown2" type="WORD"></field><field name="unknown3" type="WORD"></field><field name="unknown4" type="WORD"></field><field name="unknown5" type="WORD"></field><field name="unknown6" type="WORD"></field><field name="unknown7" type="WORD"></field><field name="unknown8" type="WORD"></field><field name="unknown9" type="WORD"></field><align type="DWORD" /></type>
+
+<type name="GameData">
+<field name="flags1" type="DWORD"></field>
+<field name="name" type="String"></field>
+<field name="type" type="PackedDWORD"></field>
+<field name="icon" type="PackedDWORD"></field>
+<field name="category" type="DWORD"></field>
+<field name="behavior" type="DWORD"></field>
+<align type="DWORD" />
+<maskmap name="behavior">
+<mask value="0x04000000">
+<field name="flags2" type="DWORD"></field>
+</mask></maskmap>
+<maskmap name="flags1">
+<mask value="0x00000001"><field name="namePlural" type="String"></field></mask>
+<mask value="0x00000002"><field name="itemSlots" type="BYTE"></field></mask>
+<mask value="0x00000004"><field name="packSlots" type="BYTE"></field></mask>
+<mask value="0x00000100"><field name="ammunition" type="WORD"></field></mask>
+<mask value="0x00000008"><field name="value" type="DWORD"></field></mask>
+<mask value="0x00000010"><field name="unknown10" type="DWORD"></field></mask>
+<mask value="0x00000020"><field name="approachDistance" type="float"></field></mask>
+<mask value="0x00080000"><field name="usableOn" type="DWORD"></field></mask>
+<mask value="0x00000080"><field name="iconHighlight" type="DWORD"></field></mask>
+<mask value="0x00000200"><field name="wieldType" type="BYTE"></field></mask>
+<mask value="0x00000400"><field name="uses" type="WORD"></field></mask>
+<mask value="0x00000800"><field name="usesLimit" type="WORD"></field></mask>
+<mask value="0x00001000"><field name="stack" type="WORD"></field></mask>
+<mask value="0x00002000"><field name="stackLimit" type="WORD"></field></mask>
+<mask value="0x00004000"><field name="container" type="DWORD"></field></mask>
+<mask value="0x00008000"><field name="equipper" type="DWORD"></field></mask>
+<mask value="0x00010000"><field name="equipPossible" type="DWORD"></field></mask>
+<mask value="0x00020000"><field name="equipActual" type="DWORD"></field></mask>
+<mask value="0x00040000"><field name="coverage" type="DWORD"></field></mask>
+<mask value="0x00100000"><field name="unknown100000" type="BYTE"></field></mask>
+<mask value="0x00800000"><field name="unknown800000" type="BYTE"></field></mask>
+<mask value="0x08000000"><field name="unknown8000000" type="WORD"></field></mask>
+<mask value="0x01000000"><field name="workmanship" type="float"></field></mask>
+<mask value="0x00200000"><field name="burden" type="WORD"></field></mask>
+<mask value="0x00400000"><field name="spell" type="WORD"></field></mask>
+<mask value="0x02000000"><field name="owner" type="DWORD"></field></mask>
+<mask value="0x04000000"><field name="acl" type="DwellingACL"></field></mask>
+<mask value="0x20000000"><field name="hookTypeUnknown" type="WORD"></field><field name="hookType" type="WORD"></field></mask>
+<mask value="0x00000040"><field name="monarch" type="DWORD"></field></mask>
+<mask value="0x10000000"><field name="hookableOn" type="WORD"></field></mask>
+<mask value="0x40000000"><field name="iconOverlay" type="PackedDWORD"></field></mask>
+</maskmap>
+<maskmap name="flags2">
+<mask value="0x00000001"><field name="iconUnderlay" type="PackedDWORD"></field></mask>
+</maskmap>
+<maskmap name="flags1">
+<mask value="0x80000000"><field name="material" type="DWORD"></field></mask>
+</maskmap>
+
+<maskmap name="flags2">
+<mask value="0x00000002"><field name="cooldownId" type="DWORD"></field></mask>
+<mask value="0x00000004"><field name="cooldown_unk2" type="DWORD"></field><field name="cooldown_unk3" type="WORD"></field><field name="cooldown_unk4" type="WORD"></field></mask>
+<mask value="0x00000008"><field name="cooldown_unk5" type="DWORD"></field></mask>
+</maskmap>
+
+
+<align type="DWORD" />
+</type><type name="AttributeData"><field name="raised" type="DWORD"></field><field name="innate" type="DWORD"></field><field name="xp" type="DWORD"></field></type><type name="VitalData"><field name="raised" type="DWORD"></field><field name="unknown" type="DWORD"></field><field name="xp" type="DWORD"></field><field name="current" type="DWORD"></field></type><type name="SkillData"><field name="raised" type="WORD"></field><field name="unknown1" type="WORD"></field><field name="state" type="DWORD"></field><field name="xp" type="DWORD"></field><field name="bonus" type="DWORD"></field><field name="diff" type="DWORD"></field><field name="unknown2" type="double"></field></type><type name="CharacterPropertyData"><field name="flags" type="DWORD"></field><field name="unknown1" type="DWORD"></field><maskmap name="flags"><mask value="0x00000001"><field name="dwordCount" type="WORD"></field><field name="dwordUnknown" type="WORD"></field><vector name="dwords" length="dwordCount"><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></vector></mask><mask value="0x00000080"><field name="qwordCount" type="WORD"></field><field name="qwordUnknown" type="WORD"></field><vector name="qwords" length="qwordCount"><field name="key" type="DWORD"></field><field name="value" type="QWORD"></field></vector></mask><mask value="0x00000002"><field name="booleanCount" type="WORD"></field><field name="booleanUnknown" type="WORD"></field><vector name="booleans" length="booleanCount"><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></vector></mask><mask value="0x00000004"><field name="doubleCount" type="WORD"></field><field name="doubleUnknown" type="WORD"></field><vector name="doubles" length="doubleCount"><field name="key" type="DWORD"></field><field name="value" type="double"></field></vector></mask><mask value="0x00000010"><field name="stringCount" type="WORD"></field><field name="stringUnknown" type="WORD"></field><vector name="strings" length="stringCount"><field name="key" type="DWORD"></field><field name="value" type="String"></field></vector></mask><mask value="0x00000040"><field name="resourceCount" type="WORD"></field><field name="resourceUnknown" type="WORD"></field><vector name="resources" length="resourceCount"><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></vector></mask><mask value="0x00000008"><field name="linkCount" type="WORD"></field><field name="linkUnknown" type="WORD"></field><vector name="links" length="linkCount"><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></vector></mask><mask value="0x00000020"><field name="positionCount" type="WORD"></field><field name="positionUnknown" type="WORD"></field><vector name="positions" length="positionCount"><field name="key" type="DWORD"></field><field name="value" type="Position0"></field></vector></mask></maskmap></type>
+
+<type name="CharacterVectorData">
+<field name="flags" type="DWORD"></field>
+<field name="unknown2" type="DWORD"></field>
+<maskmap name="flags">
+<mask value="0x00000001">
+<field name="attributeFlags" type="DWORD"></field>
+<maskmap name="attributeFlags">
+<mask value="0x00000001">
+<field name="strength" type="AttributeData"></field>
+</mask>
+<mask value="0x00000002">
+<field name="endurance" type="AttributeData"></field>
+</mask>
+<mask value="0x00000004">
+<field name="quickness" type="AttributeData"></field>
+</mask>
+<mask value="0x00000008">
+<field name="coordination" type="AttributeData"></field>
+</mask>
+<mask value="0x00000010">
+<field name="focus" type="AttributeData"></field>
+</mask>
+<mask value="0x00000020">
+<field name="self" type="AttributeData"></field>
+</mask>
+<mask value="0x00000040">
+<field name="health" type="VitalData"></field>
+</mask>
+<mask value="0x00000080">
+<field name="stamina" type="VitalData"></field>
+</mask>
+<mask value="0x00000100">
+<field name="mana" type="VitalData"></field>
+</mask>
+</maskmap>
+</mask>
+<mask value="0x00000002">
+<field name="skillCount" type="WORD"></field>
+<field name="skillUnknown" type="WORD"></field>
+<vector name="skills" length="skillCount"><field name="key" type="DWORD"></field><field name="value" type="SkillData"></field></vector>
+</mask>
+<mask value="0x00000100">
+<field name="spellbookCount" type="WORD"></field>
+<field name="spellbookUnknown" type="WORD"></field>
+<vector name="spellbook" length="spellbookCount"><field name="spell" type="DWORD"></field><field name="charge" type="float"></field></vector>
+</mask>
+<mask value="0x00000200">
+<field name="enchantmentMask" type="DWORD"></field>
+
+<maskmap name="enchantmentMask">
+<mask value="0x0001">
+<field name="lifeSpellCount" type="DWORD"></field>
+<vector name="lifeSpells" length="lifeSpellCount"><field name="enchantment" type="Enchantment"></field></vector>
+</mask>
+<mask value="0x0002">
+<field name="creatureSpellCount" type="DWORD"></field>
+<vector name="creatureSpells" length="creatureSpellCount"><field name="enchantment" type="Enchantment"></field></vector>
+</mask>
+<mask value="0x0008">
+<field name="cooldownCount" type="DWORD"></field>
+<vector name="cooldowns" length="cooldownCount"><field name="cooldown" type="Enchantment"></field></vector>
+</mask>
+<mask value="0x0004">
+<field name="vitae" type="Enchantment"></field>
+</mask>
+</maskmap>
+
+</mask>
+</maskmap>
+</type>
+
+<type name="CharacterOptionData"><field name="flags" type="DWORD"></field><field name="options" type="DWORD"></field><maskmap name="flags"><mask value="0x00000001"><field name="shortcutCount" type="DWORD"></field><vector name="shortcuts" length="shortcutCount"><field name="position" type="DWORD"></field><field name="target" type="DWORD"></field><field name="unknown3" type="DWORD"></field></vector></mask></maskmap>
+
+<field name="tab1Count" type="DWORD"></field><vector name="tab1" length="tab1Count"><field name="spell" type="DWORD"></field></vector>
+<field name="tab2Count" type="DWORD"></field><vector name="tab2" length="tab2Count"><field name="spell" type="DWORD"></field></vector><field name="tab3Count" type="DWORD"></field><vector name="tab3" length="tab3Count"><field name="spell" type="DWORD"></field></vector><field name="tab4Count" type="DWORD"></field><vector name="tab4" length="tab4Count"><field name="spell" type="DWORD"></field></vector><field name="tab5Count" type="DWORD"></field><vector name="tab5" length="tab5Count"><field name="spell" type="DWORD"></field></vector><field name="tab6Count" type="DWORD"></field><vector name="tab6" length="tab6Count"><field name="spell" type="DWORD"></field></vector><field name="tab7Count" type="DWORD"></field><vector name="tab7" length="tab7Count"><field name="spell" type="DWORD"></field></vector><field name="tab8Count" type="DWORD"></field><vector name="tab8" length="tab8Count"><field name="spell" type="DWORD"></field></vector>
+
+<maskmap name="flags">
+<mask value="0x00000008"><field name="fillcompsCount" type="WORD"></field><field name="fillcompsUnknown" type="WORD"></field><vector name="fillcomps" length="fillcompsCount"><field name="component" type="DWORD"></field><field name="count" type="DWORD"></field></vector></mask><mask value="0x00000020"><field name="unk20mask3" type="DWORD"></field></mask><mask value="0x00000040"><field name="optionFlags" type="DWORD"></field></mask><mask value="0x00000100"><field name="unknown100_1" type="DWORD"></field><field name="optionStringCount" type="WORD"></field><field name="optionStringUnknown" type="WORD"></field><vector name="optionStrings" length="optionStringCount"><field name="key" type="DWORD"></field><field name="value" type="String"></field></vector></mask><mask value="0x00000200"><field name="unknown200_1" type="DWORD"></field><field name="unknown200_2" type="BYTE"></field><field name="optionPropertyCount" type="BYTE"></field><vector name="optionProperties" length="optionPropertyCount"><field name="type" type="DWORD"></field><switch name="type"><case value="0x1000008c"><field name="unknown" type="DWORD"></field><field name="windowCount" type="DWORD"></field><vector name="windows" length="windowCount"><field name="type" type="DWORD"></field><switch name="type"><case value="0x1000008b"><field name="unknown" type="BYTE"></field><field name="propertyCount" type="BYTE"></field><vector name="properties" length="propertyCount"><field name="key" type="DWORD"></field><switch name="key"><case value="0x1000008d"><field name="unknown" type="DWORD"></field><field name="titleSource" type="BYTE"></field><switch name="titleSource"><case value="0x00"><field name="stringID" type="DWORD"></field><field name="fileID" type="DWORD"></field></case><case value="0x01"><field name="value" type="WString"></field></case></switch><field name="unknown_1b" type="DWORD"></field><field name="unknown_1c" type="WORD"></field></case><case value="0x1000008a"><field name="unknown" type="DWORD"></field><field name="value" type="BYTE"></field></case><case value="0x10000089"><field name="unknown" type="DWORD"></field><field name="value" type="DWORD"></field></case><case value="0x10000088"><field name="unknown" type="DWORD"></field><field name="value" type="DWORD"></field></case><case value="0x10000087"><field name="unknown" type="DWORD"></field><field name="value" type="DWORD"></field></case><case value="0x10000086"><field name="unknown" type="DWORD"></field><field name="value" type="DWORD"></field></case><case value="0x1000007F"><field name="unknown" type="DWORD"></field><field name="value" type="QWORD"></field></case></switch></vector></case></switch></vector></case><case value="0x10000081"><field name="unknown" type="DWORD"></field><field name="activeOpacity" type="float"></field></case><case value="0x10000080"><field name="unknown" type="DWORD"></field><field name="inactiveOpacity" type="float"></field></case></switch></vector><align type="DWORD" /></mask></maskmap></type>
+
+<type name="Enchantment">
+<field name="spell" type="WORD"></field>
+<field name="layer" type="WORD"></field>
+<field name="family" type="WORD"></field>
+<field name="unknown0" type="WORD"></field>
+<field name="difficulty" type="DWORD"></field>
+<field name="elapsedTime" type="double"></field>
+<field name="duration" type="double"></field>
+<field name="caster" type="DWORD"></field>
+<field name="unknown1" type="DWORD"></field>
+<field name="unknown2" type="DWORD"></field>
+<field name="startTime" type="double"></field>
+<field name="flags" type="DWORD"></field>
+<field name="key" type="DWORD"></field>
+<field name="value" type="float"></field>
+<field name="unknown3" type="DWORD"></field>
+</type>
+
+<type name="FellowInfo">
+<field name="fellow" type="DWORD"></field>
+<field name="unknown1" type="DWORD"></field>
+<field name="unknown2" type="DWORD"></field>
+<field name="level" type="DWORD"></field>
+<field name="maxHealth" type="DWORD"></field>
+<field name="maxStam" type="DWORD"></field>
+<field name="maxMana" type="DWORD"></field>
+<field name="curHealth" type="DWORD"></field>
+<field name="curStam" type="DWORD"></field>
+<field name="curMana" type="DWORD"></field>
+<field name="shareLoot" type="DWORD"></field>
+<field name="name" type="String"></field>
+</type>
+
+<type name="DwellingACL"><field name="flags" type="DWORD"></field><field name="open" type="DWORD"></field><field name="allegiance" type="DWORD"></field><field name="guestCount" type="WORD"></field><field name="guestLimit" type="WORD"></field><vector name="guestList" length="guestCount"><field name="guest" type="DWORD"></field><field name="storage" type="DWORD"></field></vector></type>
+<type name="DwellingItem"><field name="quantityRequired" type="DWORD"></field><field name="quantityPaid" type="DWORD"></field><field name="type" type="DWORD"></field><field name="name" type="String"></field><field name="pluralName" type="String"></field></type>
+
+</datatypes>
+<messages>
+
+<message type="0024"><field name="object" type="DWORD"></field></message>
+
+<message type="0197"><field name="sequence" type="BYTE"></field><field name="item" type="DWORD"></field><field name="count" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="019E"><field name="text" type="String"></field><field name="killed" type="DWORD"></field><field name="killer" type="DWORD"></field></message>
+
+<message type="01E0"><field name="sender" type="DWORD"></field><field name="senderName" type="String"></field><field name="text" type="String"></field></message>
+
+<message type="01E2"><field name="sender" type="DWORD"></field><field name="senderName" type="String"></field><field name="text" type="String"></field></message>
+
+<message type="02BB"><field name="text" type="String"></field><field name="senderName" type="String"></field><field name="sender" type="DWORD"></field><field name="type" type="DWORD"></field></message>
+
+<message type="02BC"><field name="text" type="String"></field><field name="senderName" type="String"></field><field name="sender" type="DWORD"></field><field name="range" type="float"></field><field name="type" type="DWORD"></field></message>
+
+<message type="02CD"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="02CE"><field name="sequence" type="BYTE"></field><field name="object" type="DWORD"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="02CF"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="QWORD"></field></message>
+
+<message type="02D1"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="02D2"><field name="sequence" type="BYTE"></field><field name="object" type="DWORD"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="02D6"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="object" type="DWORD"></field><align type="DWORD" /><field name="value" type="String"></field></message>
+
+<message type="02D8"><field name="sequence" type="BYTE"></field><field name="object" type="DWORD"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="02D9"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="02DA"><field name="sequence" type="BYTE"></field><field name="object" type="DWORD"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="02DB"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="Position0"></field></message>
+
+<message type="02DD"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="SkillData"></field></message>
+
+<message type="02E1"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="02E3"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="AttributeData"></field></message>
+
+<message type="02E7"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="VitalData"></field></message>
+
+<message type="02E9"><field name="sequence" type="BYTE"></field><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></message>
+
+<message type="F619"><field name="object" type="DWORD"></field><field name="position" type="Position"></field><field name="unknown2" type="DWORD"></field><field name="unknown3" type="DWORD"></field><field name="unknown4" type="DWORD"></field><field name="unknown5" type="DWORD"></field></message>
+
+<message type="F625"><field name="object" type="DWORD"></field><field name="model" type="ModelData"></field><field name="modelSequenceType" type="WORD"></field><field name="modelSequence" type="WORD"></field></message>
+
+<message type="F657" direction="outbound"><field name="character" type="DWORD"></field><field name="zonename" type="String"></field></message>
+
+<message type="F658"><field name="unknown1" type="DWORD"></field><field name="characterCount" type="DWORD"></field><vector name="characters" length="characterCount"><field name="character" type="DWORD"></field><field name="name" type="String"></field><field name="deleteTimeout" type="DWORD"></field></vector><field name="unknown2" type="DWORD"></field><field name="slotCount" type="DWORD"></field><field name="zonename" type="String"></field><field name="turbineChatEnabled" type="DWORD"></field><field name="unknown3" type="DWORD"></field></message>
+
+<message type="F659"><field name="reason" type="DWORD"></field></message>
+
+<message type="F745"><field name="object" type="DWORD"></field><field name="model" type="ModelData"></field><field name="physics" type="PhysicsData"></field><field name="game" type="GameData"></field></message>
+
+<message type="F746"><field name="character" type="DWORD"></field></message>
+
+<message type="F747"><field name="object" type="DWORD"></field><field name="unknown" type="DWORD"></field></message>
+
+<message type="F748"><field name="object" type="DWORD"></field><field name="position" type="Position"></field><field name="logins" type="WORD"></field><field name="sequence" type="WORD"></field><field name="portals" type="WORD"></field><field name="adjustments" type="WORD"></field></message>
+
+<message type="F749"><field name="owner" type="DWORD"></field><field name="object" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="unknown2" type="DWORD"></field><field name="unknown3" type="DWORD"></field></message>
+
+<message type="F74A"><field name="object" type="DWORD"></field><field name="unknown" type="WORD"></field><field name="unknown1" type="WORD"></field></message>
+
+<message type="F74B"><field name="object" type="DWORD"></field><field name="portalType" type="WORD"></field><field name="unknown_1" type="WORD"></field><field name="logins" type="WORD"></field><field name="loginPortals" type="WORD"></field></message>
+
+<message type="F74C"><field name="object" type="DWORD"></field><field name="logins" type="WORD"></field><field name="sequence" type="WORD"></field><field name="index" type="WORD"></field><field name="activity" type="WORD"></field><field name="animation_type" type="BYTE"></field><field name="type_flags" type="BYTE"></field><field name="stance" type="WORD"></field><switch name="animation_type"><case value="0x0000"><field name="flags" type="DWORD"></field><maskmap name="flags"><mask value="0x00000001"><field name="stance2" type="WORD"></field></mask><mask value="0x00000002"><field name="animation_1" type="WORD"></field></mask><mask value="0x00000008"><field name="animation_2" type="WORD"></field></mask><mask value="0x00000020"><field name="animation_3" type="WORD"></field></mask><mask value="0x00000004"><field name="float_1" type="float"></field></mask><mask value="0x00000010"><field name="float_2" type="float"></field></mask><mask value="0x00000040"><field name="float_3" type="float"></field></mask></maskmap><vector name="animations" length="flags" mask="0x00000F80"><field name="animation" type="WORD"></field><field name="sequence" type="WORD"></field><field name="animation_speed" type="float"></field></vector></case><case value="0x0006"><field name="target" type="DWORD"></field><field name="landblock" type="DWORD"></field><field name="xOffset" type="float"></field><field name="yOffset" type="float"></field><field name="zOffset" type="float"></field><field name="flags_2" type="DWORD"></field><field name="float_1" type="float"></field><field name="float_2" type="float"></field><field name="unknown_3" type="DWORD"></field><field name="animation_speed" type="float"></field><field name="float_4" type="float"></field><field name="heading" type="float"></field><field name="unknown_value" type="DWORD"></field></case><case value="0x0007"><field name="landblock" type="DWORD"></field><field name="xOffset" type="float"></field><field name="yOffset" type="float"></field><field name="zOffset" type="float"></field><field name="flags_2" type="DWORD"></field><field name="float_1" type="float"></field><field name="float_2" type="float"></field><field name="unknown_3" type="DWORD"></field><field name="animation_speed" type="float"></field><field name="float_4" type="float"></field><field name="heading" type="float"></field><field name="unknown_value" type="DWORD"></field></case><case value="0x0008"><field name="target" type="DWORD"></field><field name="unknown_value" type="DWORD"></field><field name="flags_2" type="DWORD"></field><field name="animation_speed" type="float"></field><field name="heading" type="float"></field></case><case value="0x0009"><field name="flags_2" type="DWORD"></field><field name="animation_speed" type="float"></field><field name="heading" type="float"></field></case></switch><align type="DWORD" /><maskmap name="type_flags"><mask value="0x01"><field name="targetid" type="DWORD"></field></mask><mask value="0x02"></mask></maskmap></message>
+
+<message type="F74E"><field name="object" type="DWORD"></field><field name="unknown_1" type="DWORD"></field><field name="heading" type="float"></field><field name="height" type="float"></field><field name="unknown_3" type="DWORD"></field><field name="unknown_4" type="DWORD"></field><field name="unknown_5" type="DWORD"></field><field name="logins" type="WORD"></field><field name="sequence" type="WORD"></field></message>
+
+<message type="F750"><field name="object" type="DWORD"></field><field name="effect" type="DWORD"></field><field name="parameter" type="float"></field></message>
+
+<message type="F751"><field name="sequence" type="DWORD"></field></message>
+
+<message type="F755"><field name="object" type="DWORD"></field><field name="effect" type="DWORD"></field><field name="speed" type="float"></field></message>
+
+<message type="F7B0"><field name="character" type="DWORD"></field><field name="sequence" type="DWORD"></field><field name="event" type="DWORD"></field><switch name="event"><case value="0x0004"><field name="text" type="String"></field></case><case value="0x0013"><field name="properties" type="CharacterPropertyData"></field><field name="vectors" type="CharacterVectorData"></field><field name="options" type="CharacterOptionData"></field><field name="inventoryCount" type="DWORD"></field><vector name="inventory" length="inventoryCount"><field name="item" type="DWORD"></field><field name="type" type="DWORD"></field></vector><field name="equippedCount" type="DWORD"></field><vector name="equipped" length="equippedCount"><field name="item" type="DWORD"></field><field name="slot" type="DWORD"></field><field name="unknown3" type="DWORD"></field></vector></case><case value="0x0020"><field name="unknown0" type="DWORD"></field><field name="allegianceSize" type="DWORD"></field><field name="followers" type="DWORD"></field><field name="recordCount" type="WORD"></field><field name="unknown1" type="WORD"></field><field name="unknown2" type="DWORD"></field><field name="unknown2a" type="DWORD"></field><field name="unknown3" type="DWORD"></field><field name="unknown4" type="DWORD"></field><field name="unknown5" type="DWORD"></field><field name="unknown6" type="DWORD"></field><field name="unknown7" type="DWORD"></field><field name="unknown8" type="DWORD"></field><field name="unknown9" type="DWORD"></field><field name="unknown10" type="DWORD"></field><field name="unknown11" type="DWORD"></field><field name="unknown12" type="DWORD"></field><field name="unknown13" type="DWORD"></field><field name="unknown14" type="float"></field><field name="unknown15" type="DWORD"></field><field name="unknown16" type="DWORD"></field><field name="unknown16a" type="DWORD"></field><field name="allegianceName" type="String"></field><field name="unknown16c" type="DWORD"></field><field name="unknown16d" type="DWORD"></field><switch name="recordCount"><case value="0x0000"><field name="unknown17" type="DWORD"></field></case></switch><vector name="records" length="recordCount"><field name="treeParent" type="DWORD"></field><field name="character" type="DWORD"></field><field name="pendingXP" type="DWORD"></field><field name="exp" type="QWORD"></field><field name="gender" type="BYTE"></field><field name="race" type="BYTE"></field><field name="rank" type="BYTE"></field><align type="DWORD" /><field name="online" type="DWORD"></field><field name="loyalty" type="WORD"></field><field name="leadership" type="WORD"></field><field name="unknown" type="double"></field><field name="name" type="String"></field></vector></case><case value="0x0021"><field name="friendsCount" type="DWORD"></field><vector name="friends" length="friendsCount"><field name="friend" type="DWORD"></field><field name="online" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="name" type="String"></field><field name="outFriendsCount" type="DWORD"></field><vector name="outFriends" length="outFriendsCount"><field name="outFriend" type="DWORD"></field></vector><field name="inFriendsCount" type="DWORD"></field><vector name="inFriends" length="inFriendsCount"><field name="inFriend" type="DWORD"></field></vector></vector><field name="type" type="DWORD"></field></case><case value="0x0022"><field name="item" type="DWORD"></field><field name="container" type="DWORD"></field><field name="slot" type="DWORD"></field><field name="type" type="DWORD"></field></case><case value="0x0023"><field name="item" type="DWORD"></field><field name="slot" type="DWORD"></field></case><case value="0x0029"><field name="unknown" type="DWORD"></field><field name="current" type="DWORD"></field><field name="count" type="DWORD"></field><vector name="titles" length="count"><field name="title" type="DWORD"></field></vector></case><case value="0x002b"><field name="title" type="DWORD"></field><field name="active" type="DWORD"></field></case><case value="0x0052"><field name="object" type="DWORD"></field></case><case value="0x0062"><field name="merchant" type="DWORD"></field><field name="buyCategories" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="buyValue" type="DWORD"></field><field name="unknown2" type="DWORD"></field><field name="buyRate" type="float"></field><field name="sellRate" type="float"></field><field name="unknown3" type="DWORD"></field><field name="unknown4" type="DWORD"></field><field name="currency" type="String"></field><field name="itemCount" type="DWORD"></field><vector name="items" length="itemCount"><field name="count" type="WORD"></field><field name="flags" type="WORD"></field><field name="object" type="DWORD"></field><field name="game" type="GameData"></field></vector></case><case value="0x00A0"><field name="item" type="DWORD"></field><field name="reason" type="DWORD"></field></case><case value="0x00A3"><field name="fellow" type="DWORD"></field></case><case value="0x00A4"><field name="fellow" type="DWORD"></field></case><case value="0x00B4"><field name="object" type="DWORD"></field><field name="totalPages" type="DWORD"></field><field name="contentsPages" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="usedPages" type="DWORD"></field><vector name="pages" length="usedPages"><field name="author" type="DWORD"></field><field name="authorName" type="String"></field><field name="zoneAccount" type="String"></field><field name="unknown1" type="WORD"></field><field name="unknown2" type="WORD"></field><field name="unknown3" type="DWORD"></field><field name="unknown4" type="DWORD"></field></vector><field name="comment" type="String"></field><field name="commentAuthor" type="DWORD"></field><field name="commentAuthorName" type="String"></field></case><case value="0x00B8"><field name="object" type="DWORD"></field><field name="page" type="DWORD"></field><field name="author" type="DWORD"></field><field name="authorName" type="String"></field><field name="zoneAccount" type="String"></field><field name="unknown3" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="unknown2" type="DWORD"></field><field name="text" type="String"></field></case><case value="0x00C9"><field name="object" type="DWORD"></field><field name="flags" type="DWORD"></field><field name="success" type="DWORD"></field><maskmap name="flags"><mask value="0x00000001"><field name="dwordCount" type="WORD"></field><field name="dwordUnknown" type="WORD"></field><vector name="dwords" length="dwordCount"><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></vector></mask><mask value="0x00002000"><field name="qwordCount" type="WORD"></field><field name="qwordUnknown" type="WORD"></field><vector name="qwords" length="qwordCount"><field name="key" type="DWORD"></field><field name="value" type="QWORD"></field></vector></mask><mask value="0x00000002"><field name="booleanCount" type="WORD"></field><field name="booleanUnknown" type="WORD"></field><vector name="booleans" length="booleanCount"><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></vector></mask><mask value="0x00000004"><field name="doubleCount" type="WORD"></field><field name="doubleUnknown" type="WORD"></field><vector name="doubles" length="doubleCount"><field name="key" type="DWORD"></field><field name="value" type="double"></field></vector></mask><mask value="0x00000008"><field name="stringCount" type="WORD"></field><field name="stringUnknown" type="WORD"></field><vector name="strings" length="stringCount"><field name="key" type="DWORD"></field><field name="value" type="String"></field></vector></mask><mask value="0x00001000"><field name="resourceCount" type="WORD"></field><field name="resourceUnknown" type="WORD"></field><vector name="resources" length="resourceCount"><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></vector></mask><mask value="0x00000010"><field name="spellCount" type="WORD"></field><field name="spellUnknown" type="WORD"></field><vector name="spells" length="spellCount"><field name="spell" type="WORD"></field><field name="flags" type="WORD"></field></vector></mask><mask value="0x00000080"><field name="protSlashing" type="float"></field><field name="protPiercing" type="float"></field><field name="protBludgeoning" type="float"></field><field name="protCold" type="float"></field><field name="protFire" type="float"></field><field name="protAcid" type="float"></field><field name="protNether" type="float"></field><field name="protLightning" type="float"></field></mask><mask value="0x00000100"><field name="flags1" type="DWORD"></field><field name="health" type="DWORD"></field><field name="healthMax" type="DWORD"></field><maskmap name="flags1"><mask value="0x00000008"><field name="strength" type="DWORD"></field><field name="endurance" type="DWORD"></field><field name="quickness" type="DWORD"></field><field name="coordination" type="DWORD"></field><field name="focus" type="DWORD"></field><field name="self" type="DWORD"></field><field name="stamina" type="DWORD"></field><field name="mana" type="DWORD"></field><field name="staminaMax" type="DWORD"></field><field name="manaMax" type="DWORD"></field></mask><mask value="0x00000001"><field name="attrHighlight" type="WORD"></field><field name="attrColor" type="WORD"></field></mask></maskmap></mask><mask value="0x00000020"><field name="weapType" type="DWORD"></field><field name="weapSpeed" type="DWORD"></field><field name="weapSkill" type="DWORD"></field><field name="weapDamage" type="DWORD"></field><field name="weapVariance" type="double"></field><field name="weapModifier" type="double"></field><field name="weapUnknown1" type="double"></field><field name="weapPower" type="double"></field><field name="weapAttack" type="double"></field><field name="weapUnknown3" type="DWORD"></field></mask><mask value="0x00000040"><field name="unknown40_1" type="DWORD"></field><field name="unknown40_2" type="DWORD"></field><field name="unknown40_3" type="DWORD"></field></mask><mask value="0x00000200"><field name="protHighlight" type="WORD"></field><field name="protColor" type="WORD"></field></mask><mask value="0x00000800"><field name="weapHighlight" type="WORD"></field><field name="weapColor" type="WORD"></field></mask><mask value="0x00000400"><field name="wandHighlight" type="WORD"></field><field name="wandColor" type="WORD"></field></mask></maskmap></case><case value="0x0147"><field name="type" type="DWORD"></field><field name="senderName" type="String"></field><field name="text" type="String"></field></case><case value="0x0196"><field name="container" type="DWORD"></field><field name="itemCount" type="DWORD"></field><vector name="items" length="itemCount"><field name="item" type="DWORD"></field><field name="type" type="DWORD"></field></vector></case><case value="0x019A"><field name="item" type="DWORD"></field></case><case value="0x01A7"><field name="number" type="DWORD"></field></case><case value="0x01A8"><field name="spell" type="WORD"></field><field name="unknown" type="WORD"></field></case><case value="0x01AC"><field name="text" type="String"></field></case><case value="0x01AD"><field name="text" type="String"></field></case><case value="0x01B1"><field name="target" type="String"></field><field name="type" type="DWORD"></field><field name="severity" type="double"></field><field name="damage" type="DWORD"></field><field name="critical" type="DWORD"></field><field name="unknown" type="DWORD"></field></case><case value="0x01B2"><field name="attacker" type="String"></field><field name="type" type="DWORD"></field><field name="severity" type="double"></field><field name="damage" type="DWORD"></field><field name="location" type="DWORD"></field><field name="critical" type="DWORD"></field><field name="unknown" type="DWORD"></field></case><case value="0x01B3"><field name="target" type="String"></field></case><case value="0x01B4"><field name="attacker" type="String"></field></case><case value="0x01C0"><field name="object" type="DWORD"></field><field name="health" type="float"></field></case><case value="0x01C3"><field name="unknown" type="String"></field><field name="age" type="String"></field></case><case value="0x01C7"><field name="unknown" type="DWORD"></field></case><case value="0x01C8"><field name="unknown" type="DWORD"></field></case><case value="0x01CB"><field name="unknown" type="DWORD"></field></case><case value="0x01F4"><field name="unknown1" type="DWORD"></field><field name="squelchCount" type="WORD"></field><field name="squelchUnknown" type="WORD"></field><vector name="users" length="squelchCount"><field name="user" type="DWORD"></field><field name="squelchMaskCount" type="DWORD"></field><vector name="squelchMasks" length="squelchMaskCount"><field name="squelchMask" type="DWORD"></field></vector><field name="name" type="String"></field><field name="account" type="DWORD"></field></vector><field name="filterMaskCount" type="DWORD"></field><vector name="filterMasks" length="filterMaskCount"><field name="filterMask" type="DWORD"></field></vector><field name="unknown2" type="DWORD"></field><field name="unknown3" type="DWORD"></field></case><case value="0x01FD"><field name="trader" type="DWORD"></field><field name="tradee" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="unknown2" type="DWORD"></field></case><case value="0x01FF"><field name="reason" type="DWORD"></field></case><case value="0x0200"><field name="item" type="DWORD"></field><field name="side" type="DWORD"></field><field name="unknown1" type="DWORD"></field></case><case value="0x0202"><field name="trader" type="DWORD"></field></case><case value="0x0203"><field name="trader" type="DWORD"></field></case><case value="0x0205"><field name="trader" type="DWORD"></field></case><case value="0x0207"><field name="item" type="DWORD"></field><field name="reason" type="DWORD"></field></case><case value="0x021D"><field name="object" type="DWORD"></field><field name="dwellingID" type="DWORD"></field><field name="owner" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="levelReq" type="DWORD"></field><field name="unknown2" type="DWORD"></field><field name="rankReq" type="DWORD"></field><field name="unknown3" type="DWORD"></field><field name="unknown4" type="DWORD"></field><field name="dwellingType" type="DWORD"></field><field name="ownerName" type="String"></field><field name="purchaseCount" type="DWORD"></field><vector name="purchaseItems" length="purchaseCount"><field name="item" type="DwellingItem"></field></vector><field name="maintenanceCount" type="DWORD"></field><vector name="maintenanceItems" length="maintenanceCount"><field name="item" type="DwellingItem"></field></vector></case><case value="0x0225"><field name="purchaseDate" type="DWORD"></field><field name="maintenanceDate" type="DWORD"></field><field name="dwellingType" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="purchaseCount" type="DWORD"></field><vector name="purchaseItems" length="purchaseCount"><field name="item" type="DwellingItem"></field></vector><field name="maintenanceCount" type="DWORD"></field><vector name="maintenanceItems" length="maintenanceCount"><field name="item" type="DwellingItem"></field></vector><field name="position" type="Position0"></field></case><case value="0x0257"><field name="unknown" type="DWORD"></field><field name="public" type="DWORD"></field><field name="monarch" type="DWORD"></field><field name="guestCount" type="WORD"></field><field name="guestLimit" type="WORD"></field><vector name="guestList" length="guestCount"><field name="guest" type="DWORD"></field><field name="access" type="DWORD"></field><field name="guestName" type="String"></field></vector></case><case value="0x0264"><field name="item" type="DWORD"></field><field name="mana" type="float"></field><field name="show" type="DWORD"></field></case><case value="0x0271"><field name="dwellingType" type="DWORD"></field><field name="landcellCount" type="DWORD"></field><vector name="landcells" length="landcellCount"><field name="landcell" type="DWORD"></field></vector><field name="availableCount" type="DWORD"></field></case><case value="0x0274"><field name="type" type="DWORD"></field><field name="number" type="DWORD"></field><field name="text" type="String"></field></case><case value="0x0276"><field name="unknown" type="DWORD"></field><field name="number" type="DWORD"></field></case><case value="0x027A"><field name="member" type="DWORD"></field><field name="logon" type="DWORD"></field></case><case value="0x028A"><field name="type" type="DWORD"></field></case><case value="0x028B"><field name="type" type="DWORD"></field><field name="text" type="String"></field></case><case value="0x0295"><field name="allegiance" type="DWORD"></field><field name="general" type="DWORD"></field><field name="trade" type="DWORD"></field><field name="lfg" type="DWORD"></field><field name="roleplay" type="DWORD"></field></case><case value="0x02BD"><field name="text" type="String"></field><field name="senderName" type="String"></field><field name="sender" type="DWORD"></field><field name="target" type="DWORD"></field><field name="type" type="DWORD"></field></case><case value="0x02BE"><field name="fellowCount" type="WORD"></field><field name="fellowUnknown" type="WORD"></field><vector name="fellows" length="fellowCount"><field name="fellow" type="FellowInfo"></field></vector><field name="name" type="String"></field><field name="leader" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="shareXP" type="DWORD"></field><field name="open" type="DWORD"></field><field name="unknown2" type="DWORD"></field><field name="unknown3" type="DWORD"></field><field name="unknown4" type="DWORD"></field></case><case value="0x02C0"><field name="fellow" type="FellowInfo"></field><field name="unknown" type="DWORD"></field></case><case value="0x02C1"><field name="spell" type="WORD"></field><field name="unknown" type="WORD"></field></case><case value="0x02C2"><field name="enchantment" type="Enchantment"></field></case><case value="0x02C3"><field name="spell" type="WORD"></field><field name="layer" type="WORD"></field></case><case value="0x02C5"><field name="count" type="DWORD"></field><vector name="enchantments" length="count"><field name="spell" type="WORD"></field><field name="layer" type="WORD"></field></vector></case><case value="0x02C7"><field name="spell" type="WORD"></field><field name="layer" type="WORD"></field></case><case value="0x02C8"><field name="count" type="DWORD"></field><vector name="enchantments" length="count"><field name="spell" type="WORD"></field><field name="layer" type="WORD"></field></vector></case><case value="0x02C9"><field name="severity" type="float"></field></case><case value="0x02CA"><field name="severity" type="float"></field></case><case value="0x02EB"><field name="text" type="String"></field></case></switch></message>
+
+<message type="F7B1" direction="outbound"><field name="sequence" type="DWORD"></field><field name="action" type="DWORD"></field><switch name="action"><case value="0x0005"><field name="key" type="DWORD"></field><field name="value" type="DWORD"></field></case><case value="0x0010"><field name="text" type="String"></field></case><case value="0x0019"><field name="item" type="DWORD"></field><field name="container" type="DWORD"></field><field name="slot" type="DWORD"></field></case><case value="0x001A"><field name="item" type="DWORD"></field><field name="slot" type="DWORD"></field></case><case value="0x001B"><field name="object" type="DWORD"></field></case><case value="0x0036"><field name="object" type="DWORD"></field></case><case value="0x0044"><field name="vital" type="DWORD"></field><field name="xp" type="DWORD"></field></case><case value="0x0045"><field name="attr" type="DWORD"></field><field name="xp" type="DWORD"></field></case><case value="0x0046"><field name="skill" type="DWORD"></field><field name="xp" type="DWORD"></field></case><case value="0x0047"><field name="skill" type="DWORD"></field><field name="credits" type="DWORD"></field></case><case value="0x0048"><field name="spell" type="DWORD"></field></case><case value="0x004A"><field name="target" type="DWORD"></field><field name="spell" type="DWORD"></field></case><case value="0x00CD"><field name="target" type="DWORD"></field><field name="item" type="DWORD"></field><field name="unknown" type="DWORD"></field></case><case value="0x019C"><field name="position" type="DWORD"></field><field name="target" type="DWORD"></field><field name="unknown3" type="DWORD"></field></case><case value="0x019D"><field name="position" type="DWORD"></field></case><case value="0x01A1"><field name="options" type="CharacterOptionData"></field></case><case value="0x01E3"><field name="spell" type="DWORD"></field><field name="position" type="DWORD"></field><field name="spellbar" type="DWORD"></field></case><case value="0x01E4"><field name="spell" type="DWORD"></field><field name="spellbar" type="DWORD"></field></case></switch></message>
+
+<message type="F7DB"><field name="object" type="DWORD"></field><field name="model" type="ModelData"></field><field name="physics" type="PhysicsData"></field><field name="game" type="GameData"></field></message>
+
+<message type="F7DE" direction="both"><field name="size" type="DWORD"></field><field name="type" type="DWORD"></field><field name="unknown1" type="DWORD"></field><field name="unknown2" type="DWORD"></field><field name="unknown3" type="DWORD"></field><field name="unknown4" type="DWORD"></field><field name="unknown5" type="DWORD"></field><field name="unknown6" type="DWORD"></field><field name="payload" type="DWORD"></field><switch name="type"><case value="0x01"><field name="channel" type="DWORD"></field><field name="senderName" type="WString"></field><field name="text" type="WString"></field><field name="unknown01_1" type="DWORD"></field><field name="sender" type="DWORD"></field><field name="unknown01_2" type="DWORD"></field><field name="unknown01_3" type="DWORD"></field></case><case value="0x03"><field name="unknown03_1" type="DWORD"></field><field name="unknown03_2" type="DWORD"></field><field name="unknown03_3" type="DWORD"></field><field name="outChannel" type="DWORD"></field><field name="outText" type="WString"></field><field name="unknown03_4" type="DWORD"></field><field name="outSender" type="DWORD"></field><field name="unknown03_5" type="DWORD"></field><field name="unknown03_6" type="DWORD"></field></case><case value="0x05"><field name="unknown05_1" type="DWORD"></field><field name="unknown05_2" type="DWORD"></field><field name="unknown05_3" type="DWORD"></field><field name="unknown05_4" type="DWORD"></field></case></switch></message>
+
+<message type="F7E0"><field name="text" type="String"></field><field name="type" type="DWORD"></field></message>
+
+<message type="F7E1"><field name="players" type="DWORD"></field><field name="unknown" type="DWORD"></field><field name="server" type="String"></field></message>
+
+<message type="F7E2"><field name="unknown1" type="DWORD"></field><field name="type" type="DWORD"></field><field name="unknown3" type="DWORD"></field><field name="resource" type="DWORD"></field><field name="version" type="DWORD"></field><field name="compression" type="BYTE"></field><field name="unknown4" type="DWORD"></field><field name="dataSize" type="DWORD"></field><switch name="compression"><case value="0x00"><vector name="data" length="dataSize" skip="4"><field name="byte" type="BYTE"></field></vector></case><case value="0x01"><field name="fileSize" type="DWORD"></field><vector name="data" length="dataSize" skip="8"><field name="byte" type="BYTE"></field></vector></case></switch></message>
+
+<message type="F7E7"><field name="size" type="DWORD"></field><field name="revisionCount" type="DWORD"></field><vector name="revisions" length="revisionCount"><field name="header_0150" type="DWORD"></field><field name="header_014C" type="DWORD"></field><field name="revision" type="DWORD"></field><field name="portalCount" type="DWORD"></field><vector name="portalResources" length="portalCount"><field name="resource" type="DWORD"></field></vector><field name="cellCount" type="DWORD"></field><vector name="cellResources" length="cellCount"><field name="resource" type="DWORD"></field></vector></vector></message>
+</messages>
+</schema>

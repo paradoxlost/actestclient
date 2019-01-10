@@ -30,12 +30,19 @@ def SendAction(action, data = None):
 
 class MessageWrapper(object):
 	_parser = None
+	_structs = []
 
 	def __init__(self, parser):
 		self._parser = parser
+		fields = list(parser.GetStructFields())
+		#print(fields)
+		self._structs = fields
 
 	def __getattr__(self, attr):
-		return self._parser[attr]
+		if attr in self._structs:
+			return self.child(attr)
+		else:
+			return self._parser[attr]
 
 	def __len__(self):
 		return self._parser.Length
@@ -44,6 +51,7 @@ class MessageWrapper(object):
 		return MessageWrapper(self._parser.Struct(idx))
 
 	def child(self, name):
+		#print("Get Child {}".format(name))
 		return MessageWrapper(self._parser.Struct(name))
 
 class Message(Fragment):

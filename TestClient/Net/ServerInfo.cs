@@ -27,7 +27,8 @@ namespace TestClient.Net
 		public long LastPing { get; set; }
 		public long LastSyncSent { get; set; }
 		public long LastSyncRecv { get; set; }
-		public int LastAck { get; set; }
+		public uint LastAckRecv { get; set; }
+		public uint LastAckSent { get; set; }
 		public ushort LastEventAck { get; set; }
 		public long StartTime { get; private set; }
 		public long ConnectTime { get; private set; }
@@ -64,7 +65,7 @@ namespace TestClient.Net
 		{
 			if (ReadAddress.Address.Equals(endPoint.Address))
 			{
-				return ReadAddress.Port <= endPoint.Port && endPoint.Port <= ReadAddress.Port + 1;
+				return WriteAddress.Port == endPoint.Port || endPoint.Port == ReadAddress.Port;
 			}
 			return false;
 		}

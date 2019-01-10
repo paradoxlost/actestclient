@@ -26,6 +26,7 @@ namespace TestClient.Net.Packets
 		NetError		= 0x00100000,
 		NetDisconnect   = 0x00200000,
 		Command			= 0x00400000,
+		Error			= 0x00800000,
 		TimeSync		= 0x01000000,
 		EchoRequest		= 0x02000000,
 		EchoResponse	= 0x04000000,

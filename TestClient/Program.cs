@@ -61,12 +61,13 @@ namespace TestClient
 
 			while (true)
 			{
-				displayManager.Clear(0);
-				displayManager.Write(0, 0, "AC Test Client");
+				displayManager.Clear();
+				displayManager.Refresh();
+				//displayManager.Write(0, 0, "AC Test Client");
 
-				displayManager.Write(-15, 0, networkManager == null ? "Disconnected" : networkManager.World);
+				//displayManager.Write(-15, 0, networkManager == null ? "Disconnected" : networkManager.World);
 
-				displayManager.Write(0, -1, "> ");
+				//displayManager.Write(0, -1, "> ");
 
 				commandManager.CheckInput();
 

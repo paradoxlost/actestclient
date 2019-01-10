@@ -76,6 +76,7 @@ namespace TestClient.Net
 		}
 
 		private ConcurrentQueue<PacketQueueEntry> packetQueue;
+		private AutoResetEvent packetReady;
 
 		#endregion
 
@@ -89,6 +90,7 @@ namespace TestClient.Net
 			this.worldServers = new List<ServerInfo>();
 			this.pendingFragments = new ConcurrentDictionary<uint, FragmentedPacket>();
 			this.packetQueue = new ConcurrentQueue<PacketQueueEntry>();
+			this.packetReady = new AutoResetEvent(false);
 
 			this.networkThread = new Thread(NetworkThreadStart);
 
@@ -207,38 +209,41 @@ namespace TestClient.Net
 		public void SendMessage<T>(ServerInfo si, T packet, bool includeSequence, bool incrementSequence, PacketFlags flags) where T : Packet
 		{
 			packetQueue.Enqueue(new PacketQueueEntry(si, packet, includeSequence, incrementSequence, flags));
+			packetReady.Set();
 		}
 
-		private void Send(ServerInfo si, byte[] data, int length)
+		private void Send(ServerInfo si, byte[] data, int length, bool useRead)
 		{
-			this.connection.SendTo(data, length, SocketFlags.None, si.Flags.HasFlag(ServerFlags.Shook) ? si.WriteAddress : si.ReadAddress);
+			Debug.WriteLine($"Sending Packet with ServerFlags = {si.Flags:G}");
+			this.connection.SendTo(data, length, SocketFlags.None,
+				useRead ? si.ReadAddress : si.WriteAddress);
 		}
 
-		private void Send<T>(ServerInfo si, T packet) where T : Packet
-		{
-			Send(si, packet, 1);
-		}
+		// private void Send<T>(ServerInfo si, T packet) where T : Packet
+		// {
+		// 	Send(si, packet, 1);
+		// }
 
-		private void Send<T>(ServerInfo si, T packet, int count) where T : Packet
-		{
-			byte[] buffer = ArrayPool<byte>.Shared.Rent(1024);
-			int sendLength = 0;
-			try
-			{
-				using (MemoryStream ms = new MemoryStream(buffer, true))
-				{
-					sendLength = packet.Serialize(ms);
-				}
-				for (int i = 0; i < count; i++)
-				{
-					Send(si, buffer, sendLength);
-				}
-			}
-			finally
-			{
-				ArrayPool<byte>.Shared.Return(buffer, true);
-			}
-		}
+		// private void Send<T>(ServerInfo si, T packet, int count) where T : Packet
+		// {
+		// 	byte[] buffer = ArrayPool<byte>.Shared.Rent(1024);
+		// 	int sendLength = 0;
+		// 	try
+		// 	{
+		// 		using (MemoryStream ms = new MemoryStream(buffer, true))
+		// 		{
+		// 			sendLength = packet.Serialize(ms);
+		// 		}
+		// 		for (int i = 0; i < count; i++)
+		// 		{
+		// 			Send(si, buffer, sendLength, false);
+		// 		}
+		// 	}
+		// 	finally
+		// 	{
+		// 		ArrayPool<byte>.Shared.Return(buffer, true);
+		// 	}
+		// }
 
 		private void Send<T>(ServerInfo si, T packet, bool includeSequence, bool incrementSequence, PacketFlags flags) where T : Packet
 		{
@@ -249,6 +254,12 @@ namespace TestClient.Net
 			int sendLength = 0;
 			try
 			{
+				if (si.RecvCount > si.LastAckSent)
+				{
+					packet.SetAck(si.RecvCount);
+					si.LastAckSent = si.RecvCount;
+				}
+
 				using (MemoryStream ms = new MemoryStream(buffer, true))
 				{
 					sendLength = packet.Serialize(ms);
@@ -269,7 +280,8 @@ namespace TestClient.Net
 					header.Time = 0;
 				}
 
-				if (si.Flags.HasFlag(ServerFlags.Shook))
+				if (si.ClientId > 0)
+				//if (si.Flags.HasFlag(ServerFlags.Connected))
 				{
 					header.Id = si.ClientId;
 					header.Table = si.Table;
@@ -308,7 +320,8 @@ namespace TestClient.Net
 					header.Checksum = packet.Hash(0, buffer);
 				}
 
-				Send(si, buffer, sendLength);
+				bool useRead = packet.Header.Flags.HasFlag(PacketFlags.ConnectResponse);
+				Send(si, buffer, sendLength, useRead);
 			}
 			finally
 			{
@@ -398,7 +411,7 @@ namespace TestClient.Net
 				si.RecvCount = header.Sequence;
 			}
 
-			if (!si.Flags.HasFlag(ServerFlags.Shook) || header.Table != si.Table)
+			if (!si.Flags.HasFlag(ServerFlags.Connected) || header.Table != si.Table)
 			{
 				// error?
 			}
@@ -445,8 +458,8 @@ namespace TestClient.Net
 
 			if (type.HasFlag(PacketFlags.AckSequence))
 			{
-				int acked = pBuffer.Read<int>(ref position);
-				si.LastAck = acked;
+				uint acked = pBuffer.Read<uint>(ref position);
+				si.LastAckRecv = acked;
 
 				type &= ~PacketFlags.AckSequence;
 			}
@@ -488,6 +501,12 @@ namespace TestClient.Net
 			// 	type &= ~PacketFlags.NetError;
 			// }
 
+			// if (si.Flags.HasFlag(ServerFlags.Connecting))
+			// {
+			// 	si.Flags &= ~ServerFlags.Connecting;
+			// 	si.Flags |= ServerFlags.Connected;
+			// }
+
 			//Debug.WriteLine(Enum.Format(typeof(PacketFlags), type, "G"));
 			switch (type)
 			{
@@ -505,7 +524,7 @@ namespace TestClient.Net
 						si.ServerId = header.Id;
 						si.ClientId = (ushort)clientId;
 						si.Table = header.Table;
-						si.Flags |= ServerFlags.Shook;
+						si.Flags |= ServerFlags.Connecting;
 
 						//Debug.WriteLine($"{serverTime:X16} {cookie:X16} {clientId:X4} {seed_s2c:X8} {seed_c2s:X8} {unk:X4}");
 
@@ -517,6 +536,11 @@ namespace TestClient.Net
 					break;
 
 				case PacketFlags.Fragmented:
+					if (si.Flags.HasFlag(ServerFlags.Connecting))
+					{
+						si.Flags &= ~ServerFlags.Connecting;
+						si.Flags |= ServerFlags.Connected;
+					}
 					// send to fragment handler
 					// we can have multiple fragments in one packet
 					while (position < length)
@@ -550,7 +574,10 @@ namespace TestClient.Net
 					break;
 
 				case PacketFlags.Default:
+					break;
+
 				default:
+					Debug.WriteLine($"Invalid Packet State {type:G}");
 					break;
 			}
 		}
@@ -574,10 +601,11 @@ namespace TestClient.Net
 				Debug.WriteLine("Network Loop Start");
 				while (shouldBeRunning)
 				{
+					packetReady.WaitOne(TimeSpan.FromMilliseconds(250));
 					// anything in the queue
 					if (this.packetQueue.TryDequeue(out PacketQueueEntry entry))
 					{
-						//Debug.WriteLine("Sending packet from queue");
+						Debug.WriteLine("Sending packet from queue");
 						// send it
 						Send(entry.Server, entry.Packet, entry.IncludeSequence, entry.IncrementSequence, entry.Flags);
 					}
@@ -605,14 +633,21 @@ namespace TestClient.Net
 
 		private void SendSync(ServerInfo si, long currentTicks, long currentTime)
 		{
-			if (si.Flags.HasFlag(ServerFlags.Shook))
+			if (si.Flags.HasFlag(ServerFlags.Connected))
 			{
 				long delta = currentTicks - si.LastSyncSent;
-				if (delta >= 2000)
+				if (delta >= 30000)
 				{
 					//Debug.WriteLine($"Server tick delta {delta} current {currentTicks}");
 					Send(si, new TimeSyncPacket(currentTime), false, false, PacketFlags.Default);
 					si.LastSyncSent = currentTicks;
+				}
+
+				delta = currentTicks - si.LastPing;
+				if (delta >= 10000)
+				{
+					SendMessage(si, new PingEventFragment());
+					si.LastPing = currentTicks;
 				}
 			}
 		}

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.CommandLineUtils;
 
@@ -32,21 +34,81 @@ namespace TestClient.Ux
 			//inputThread.Start();
 		}
 
+		private static string[] ToStrings(string commandLine)
+		{
+			List<string> result = new List<string>();
+
+			int start = 0;
+			int pos = 0;
+			bool escaped = false;
+			bool pop = false;
+
+			while (pos < commandLine.Length)
+			{
+				if (commandLine[pos] == '"')
+				{
+					if (escaped)
+					{
+						// end of escaped arg
+						escaped = false;
+						pop = true;
+					}
+					else
+					{
+						// start of a new arg with spaces
+						escaped = true;
+						start = ++pos;
+					}
+				}
+				else if (commandLine[pos] == ' ' && !escaped)
+				{
+					pop = true;
+				}
+				else if (pos == (commandLine.Length - 1))
+				{
+					pop = true;
+					pos++;
+				}
+
+				if (pop)
+				{
+					pop = false;
+					string arg = commandLine.Substring(start, (pos - start));
+					if (!string.IsNullOrWhiteSpace(arg))
+						result.Add(arg);
+
+					start = ++pos;
+				}
+				else
+					pos++;
+			}
+
+			return result.ToArray();
+		}
+
+		private Task<string> readResult = null;
 		public void CheckInput()
 		{
-			try
-			{
-				string commands = Console.ReadLine();
-				parser.Execute(commands.Split(' '));
-			}
-			catch (Exception ex)
-			{
-			}
+			if (readResult == null)
+				readResult = Console.In.ReadLineAsync();
 
-			// if (Console.KeyAvailable)
-			// {
+			if (readResult.IsCompleted)
+			{
+				//string commands = Console.ReadLine();
+				string commands = readResult.Result;
 
-			// }
+				try
+				{
+					if (!string.IsNullOrEmpty(commands))
+						parser.Execute(ToStrings(commands));
+				}
+				catch (Exception ex)
+				{
+				}
+
+				readResult.Dispose();
+				readResult = null;
+			}
 		}
 
 		public CommandLineApplication CreateCommand(string name, Func<int> action)

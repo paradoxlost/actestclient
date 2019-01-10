@@ -103,6 +103,22 @@ namespace TestClient.Net.Messages
 			return result;
 		}
 
+		public string[] GetStructFields()
+		{
+			Parse();
+			List<string> result = new List<string>();
+
+			foreach (KeyValuePair<string, int> kv in FieldIndex)
+			{
+				MessageParser.Field f = Fields[kv.Value];
+				//System.Diagnostics.Debug.WriteLine($"Field {kv.Key} at {kv.Value} is {f.Type:G}");
+				if (f.Type == MemberParserType.Struct || f.Type == MemberParserType.Vector)
+					result.Add(kv.Key);
+			}
+
+			return result.ToArray();
+		}
+
 		#endregion
 
 		#region Parse

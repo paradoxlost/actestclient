@@ -5,21 +5,30 @@ import api
 from api.commands import *
 from api.messages import *
 
-def createObject(msg):
-	#print("Create Object", msg.Value[int]("object"))
-	phys = msg.child("physics")
-	flags = phys.flags
-	if flags & 0x00030000:
-		print(msg.child("game").name)
+from api.display import ChatPane, enablePane
 
-def characterInWorld(msg):
-	print("In World?")
+chat = ChatPane()
+enablePane(chat)
 
-def characterInfo(msg):
-	print("Character Info")
+def globalChatMessage(msg):
+	if msg.type == 1:
+		# channel, senderName, text
+		chat.addChat("({:4x}) {:>25}: {}".format(msg.channel, msg.senderName, msg.text))
 
-HandleMessage(0xf745, createObject)
-HandleMessage(0xf746, characterInWorld)
+HandleMessage(0xf7de, globalChatMessage)
 
-HandleMessageEvent(0xf7b0, 0x0013, characterInfo)
+#def createObject(msg):
+#	#print("Create Object", msg.Value[int]("object"))
+#	phys = msg.child("physics")
+#	flags = phys.flags
+#	if flags & 0x00030000:
+#		print(msg.child("game").name)
+
+#def characterInfo(msg):
+#	print("Character Info")
+#	#vecs = msg.child("vectors")
+
+#HandleMessage(0xf745, createObject)
+
+#HandleMessageEvent(0xf7b0, 0x0013, characterInfo)
 

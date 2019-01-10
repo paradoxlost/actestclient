@@ -7,10 +7,11 @@ namespace TestClient.Net
 	[Flags]
 	public enum ServerFlags
 	{
-		Awake = 0,
-		Shook = 1,
-		ChecksumSeeds = 2,
-		Sync = 4,
+		None = 0,
+		Connecting = 1,
+		Connected = 2,
+		ChecksumSeeds = 4,
+		Sync = 8,
 		Wakeup = 0x00080000
 	}
 }

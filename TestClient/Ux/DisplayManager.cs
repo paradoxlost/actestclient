@@ -10,17 +10,31 @@ namespace TestClient.Ux
 {
 	public class DisplayManager
 	{
+		public static DisplayManager Instance { get; private set; }
+
 		public CommandManager CommandManager { get; set; }
 		private AutoResetEvent refreshEvent;
 
+		public event EventHandler Refreshed;
+
+		public int Height { get { return Console.WindowHeight; } }
+		public int Width { get { return Console.WindowWidth; } }
+
 		public DisplayManager()
 		{
+			Instance = this;
+
 			refreshEvent = new AutoResetEvent(false);
 
 			Console.Clear();
 
 			Console.WindowTop = 0;
 			Console.BufferHeight = Console.WindowHeight;
+		}
+
+		public System.Drawing.Point GetCursor()
+		{
+			return new System.Drawing.Point(Console.CursorLeft, Console.CursorTop);
 		}
 
 		public void Move(int col, int line)
@@ -39,6 +53,14 @@ namespace TestClient.Ux
 		public void Refresh()
 		{
 			refreshEvent.Set();
+			try
+			{
+				if (Refreshed != null)
+					Refreshed(this, EventArgs.Empty);
+			}
+			catch
+			{
+			}
 		}
 
 		public void Wait()

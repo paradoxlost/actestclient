@@ -36,6 +36,7 @@ namespace TestClient.Scripts
 		private Dictionary<uint, MessageDelegate> messageHandlers;
 		private Dictionary<uint, Dictionary<uint, MessageDelegate>> eventMessageHandlers;
 		private ConcurrentQueue<Message> messageQueue;
+		private AutoResetEvent messageReady;
 
 		private NetworkManager networkManager;
 		private DisplayManager displayManager;
@@ -47,6 +48,8 @@ namespace TestClient.Scripts
 		protected ScriptManager()
 		{
 			Instance = this;
+
+			messageReady = new AutoResetEvent(false);
 
 			messageHandlers = new Dictionary<uint, MessageDelegate>();
 			eventMessageHandlers = new Dictionary<uint, Dictionary<uint, MessageDelegate>>();
@@ -169,7 +172,7 @@ namespace TestClient.Scripts
 
 		private void OnMessageReceived(object sender, MessageEventArgs e)
 		{
-			//Debug.WriteLine($"{e.Message.Type:X4} Received");
+			Debug.WriteLine($"{e.Message.Type:X4} Received");
 			QueueMessage(e.Message);
 		}
 
@@ -217,6 +220,7 @@ namespace TestClient.Scripts
 		public void QueueMessage(Message msg)
 		{
 			messageQueue.Enqueue(msg);
+			messageReady.Set();
 		}
 
 		#region Script Thread
@@ -227,11 +231,16 @@ namespace TestClient.Scripts
 
 			try
 			{
-				Debug.WriteLine("Network Loop Start");
+				Debug.WriteLine("Script Loop Start");
 				while (running)
 				{
+					messageReady.WaitOne(TimeSpan.FromSeconds(1));
+
+					if (this.messageQueue.Count == 0)
+						continue;
+
 					// anything in the queue
-					if (this.messageQueue.TryDequeue(out Message msg))
+					while (this.messageQueue.TryDequeue(out Message msg))
 					{
 						try
 						{
